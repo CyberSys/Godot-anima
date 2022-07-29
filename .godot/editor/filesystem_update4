@@ -1,5 +1,9 @@
-res://addons/anima/core/anima_node.gd
-res://addons/anima/core/costants.gd
-res://addons/anima/core/easings.gd
-res://addons/anima/ui/AnimaUI.gd
 res://demos/DemosSelector.tscn
+res://demos/3DBoxes.tscn
+res://tests/Test.tscn
+res://tests/Test.gd
+res://addons/anima/core/visual_node.gd
+res://addons/anima/core/tween.gd
+res://addons/anima/utils/node_properties.gd
+res://addons/anima/utils/strings.gd
+res://addons/anima/animations/back_entrances/back_in_left.gd

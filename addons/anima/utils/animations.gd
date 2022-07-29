@@ -51,7 +51,7 @@ static func get_animation_keyframes(animation_name: String) -> Dictionary:
 
 	var resource_file = _get_animation_script_with_path(animation_name)
 	if resource_file:
-		var script: Reference = load(resource_file).new()
+		var script: RefCounted = load(resource_file).new()
 		var keyframes: Dictionary = script.KEYFRAMES
 
 		AnimaUI._custom_animations[animation_name] = keyframes

@@ -3,12 +3,11 @@ extends Control
 
 const Test := {}
 
-export (StyleBoxFlat) var test setget set_test
-
 var anima: AnimaNode 
 
 func _ready():
-	$AnimaVisualNode.play_animation("default")
+#	$AnimaVisualNode.play_animation("default")
+
 
 #	var anima: AnimaNode = Anima.begin_single_shot(self)
 
@@ -69,8 +68,20 @@ func _ready():
 #
 
 	anima = Anima.begin(self) \
-		.then(Anima.Node($CanvasModulate).anima_property("color", Color.rebeccapurple, 5.5)) \
+		.then(Anima.Node($CanvasModulate).anima_property("color", Color.REBECCA_PURPLE, 5.5)) \
 		.play()
+
+
+	var tween = create_tween().set_loops().set_parallel(true)
+	tween.tween_property($Button, "position:x", 200.0, 1).as_relative()
+	tween.tween_callback(jump)
+	tween.tween_interval(2)
+	tween.tween_property($Button, "position:x", -200.0, 1).as_relative()
+	tween.tween_callback(jump)
+	tween.tween_interval(2)
+
+func jump() -> void:
+	print("jump")
 
 var _temp
 
@@ -90,11 +101,6 @@ func _on_Button2_pressed():
 
 func _on_v_changed() -> void:
 	pass
-
-func set_test(v: StyleBoxFlat) -> void:
-	test = v
-	v.connect("changed", self, "_on_v_changed")
-	print(test)
 
 func _on_Button_pressed():
 	var button_size := 178

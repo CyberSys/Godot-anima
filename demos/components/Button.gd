@@ -1,6 +1,6 @@
 extends Button
 
-export (String) var scene = ''
+@export var scene := ""
 
 func _on_ButtonAnimations_pressed():
 	printt("Loading new scene", scene)

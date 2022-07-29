@@ -4,7 +4,7 @@ extends Node
 
 signal animation_completed
 
-export (Dictionary) var __anima_visual_editor_data = {}
+@export var __anima_visual_editor_data := {}
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode
@@ -119,7 +119,7 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 	_active_anima_node = anima
 	anima.play_with_delay(1.0)
 
-	yield(anima, "animation_completed")
+	await anima.animation_completed
 
 	if reset_initial_values:
 		_reset_initial_values()
@@ -210,14 +210,14 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 				if from.find(":") >= 0:
 					anima_data.from = from
 				else:
-					anima_data.from = float(from)
+					anima_data.from = str(from).to_float()
 			elif key == "to":
 				var to: String = animation_data.property.to
 
 				if to.find(":") >= 0:
 					anima_data.to = to
 				else:
-					anima_data.to = float(to)
+					anima_data.to = str(to).to_float()
 			else:
 				var value = animation_data.property[key]
 				
@@ -239,7 +239,7 @@ func _create_animation_data(animation_data: Dictionary) -> Dictionary:
 func _reset_initial_values() -> void:
 	_active_anima_node = null
 
-	yield(get_tree().create_timer(1.0), "timeout")
+#	yield(get_tree().create_timer(1.0), "timeout")
 
 	# reset node initial values
 	if _initial_values.size() == 0:
@@ -254,7 +254,7 @@ func _reset_initial_values() -> void:
 			var mapped_property = AnimaNodesProperties.map_property_to_godot_property(node, property)
 
 			if mapped_property.has('callback'):
-				mapped_property.callback.call_func(mapped_property.param, initial_value)
+				mapped_property.callback.call(mapped_property.param, initial_value)
 			elif mapped_property.has('subkey'):
 				node[mapped_property.property][mapped_property.key][mapped_property.subkey] = initial_value
 			elif mapped_property.has('key'):

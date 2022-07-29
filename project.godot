@@ -24,10 +24,30 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/anima/core/declaration/anima_declaration_base.gd"
 }, {
+"base": "AnimaDeclarationBase",
+"class": &"AnimaDeclarationForAnimation",
+"language": &"GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_animation.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": &"AnimaDeclarationForProperty",
+"language": &"GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_property.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": &"AnimaDeclarationForRelativeProperty",
+"language": &"GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_relative_property.gd"
+}, {
 "base": "AnimaDeclarationNode",
 "class": &"AnimaDeclarationGrid",
 "language": &"GDScript",
 "path": "res://addons/anima/core/declaration/anima_declaration_grid.gd"
+}, {
+"base": "AnimaDeclarationNode",
+"class": &"AnimaDeclarationGroup",
+"language": &"GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_group.gd"
 }, {
 "base": "RefCounted",
 "class": &"AnimaDeclarationNode",
@@ -69,7 +89,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/anima/utils/strings.gd"
 }, {
-"base": "Tween",
+"base": "Node",
 "class": &"AnimaTween",
 "language": &"GDScript",
 "path": "res://addons/anima/core/tween.gd"
@@ -78,12 +98,21 @@ _global_script_classes=[{
 "class": &"AnimaTweenUtils",
 "language": &"GDScript",
 "path": "res://addons/anima/utils/tween_utils.gd"
+}, {
+"base": "Node",
+"class": &"AnimaVisualNode",
+"language": &"GDScript",
+"path": "res://addons/anima/core/visual_node.gd"
 }]
 _global_script_class_icons={
 "AnimaAnimationsUtils": "",
 "AnimaAwaitableAddChild": "",
 "AnimaDeclarationBase": "",
+"AnimaDeclarationForAnimation": "",
+"AnimaDeclarationForProperty": "",
+"AnimaDeclarationForRelativeProperty": "",
 "AnimaDeclarationGrid": "",
+"AnimaDeclarationGroup": "",
 "AnimaDeclarationNode": "",
 "AnimaDeclarationNodes": "",
 "AnimaEasing": "",
@@ -93,7 +122,8 @@ _global_script_class_icons={
 "AnimaShape": "",
 "AnimaStrings": "",
 "AnimaTween": "",
-"AnimaTweenUtils": ""
+"AnimaTweenUtils": "",
+"AnimaVisualNode": ""
 }
 
 [application]

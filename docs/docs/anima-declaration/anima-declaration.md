@@ -263,7 +263,7 @@ Callback to be triggered when the Node animation completes.
 ####  Syntax
 
 ```gdscript
-anima_on_completed(on_completed: FuncRef | Callable, on_completed_value, on_backwards_started_value = null)
+anima_on_completed(on_completed: Callable | Callable, on_completed_value, on_backwards_started_value = null)
 ```
 
 | Param | Type | Required | Description |

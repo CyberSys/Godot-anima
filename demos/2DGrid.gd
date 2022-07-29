@@ -16,7 +16,7 @@ func _ready() -> void:
 func _init_balls() -> void:
 	var ball = BALL_ITEM.instance()
 	
-	var window_size := OS.get_window_size()
+	var window_size = OS.get_window_size()
 	var ball_size: Vector2 = ball.get_size()
 	
 	var columns = floor(window_size.x / ball_size.x) - 6
@@ -84,14 +84,14 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 			{ from = Vector2(1, 1), to = Vector2(0, 0) }
 		]
 		modulate_frames = [
-			{ from = Color.white, to = Color(1, 0, 0.49, 0) }
+			{ from = Color.WHITE, to = Color(1, 0, 0.49, 0) }
 		]
 	else:
 		scale_frames = [
 			{ from = Vector2(0, 0), to = Vector2(1, 1) }
 		]
 		modulate_frames = [
-			{ from = Color(0.33, 0.66, 0.49, 0), to = Color.white }
+			{ from = Color(0.33, 0.66, 0.49, 0), to = Color.WHITE }
 		]
 
 	anima_tween.add_frames(data, 'scale', scale_frames)

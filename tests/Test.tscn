@@ -1,189 +1,72 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://san1vdxckp3q"]
 
-[ext_resource path="res://tests/Test.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/icons/anima.svg" type="Texture" id=7]
+[ext_resource type="Script" path="res://tests/Test.gd" id="1"]
+[ext_resource type="Script" path="res://addons/anima/core/visual_node.gd" id="2"]
 
-[sub_resource type="StyleBoxFlat" id=5]
-
-[sub_resource type="StyleBoxEmpty" id=8]
-
-[sub_resource type="StyleBoxFlat" id=6]
-corner_radius_top_left = 100
-corner_radius_top_right = 100
-corner_detail = 18
-
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id="7"]
 resource_name = "New Anim"
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Control/Button2:rect_position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray(  ),
-"transitions": PoolRealArray(  ),
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
 "update": 0,
-"values": [  ]
+"values": []
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7nxo1"]
+_data = {
+"New Anim": SubResource("7")
 }
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-test = SubResource( 5 )
+script = ExtResource("1")
 
 [node name="Button" type="Button" parent="."]
-margin_left = 121.0
-margin_top = 286.0
-margin_right = 299.0
-margin_bottom = 338.0
-rect_pivot_offset = Vector2( 89, 26 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__initialy": 366.23,
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Control" type="Control" parent="."]
-margin_left = 183.0
-margin_top = 374.0
-margin_right = 223.0
-margin_bottom = 414.0
-rect_pivot_offset = Vector2( 20, 20 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button1" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
 
 [node name="Button2" type="Button" parent="Control"]
 anchor_right = 2.869
 anchor_bottom = 1.828
-margin_right = 176.24
-margin_bottom = -36.12
-rect_pivot_offset = Vector2( 145.5, 18.5 )
-custom_styles/normal = SubResource( 8 )
-icon = ExtResource( 7 )
-__meta__ = {
-"__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Button3" type="Button" parent="Control"]
-margin_left = -1.0
-margin_top = 54.0
-margin_right = 11.0
-margin_bottom = 74.0
 
 [node name="Button4" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
 
 [node name="Button5" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
 
 [node name="Button6" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
 
 [node name="Button7" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Button2" type="Button" parent="."]
-margin_left = 835.0
-margin_top = 34.0
-margin_right = 967.0
-margin_bottom = 54.0
-rect_pivot_offset = Vector2( 66, 18.5 )
 text = "Do it"
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
-}
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
 autostart = true
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": "scale",
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="ColorRect" type="Panel" parent="."]
-margin_left = -194.574
-margin_top = -24.5694
-margin_right = -5.57382
-margin_bottom = 79.4306
-rect_pivot_offset = Vector2( 94.5001, 52 )
-custom_styles/panel = SubResource( 6 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-"anims/New Anim" = SubResource( 7 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": "scale",
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
+libraries = {
+"": SubResource("AnimationLibrary_7nxo1")
 }
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color( 0.4, 0.2, 0.6, 1 )
-__meta__ = {
-"__initial_easing": "easing",
-"__initial_scale": Vector2( 1, 1 ),
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
+color = Color(0.4, 0.2, 0.6, 1)
 
 [node name="AnimaVisualNode" type="Node" parent="."]
-script = ExtResource( 2 )
-__meta__ = {
-"__anima_visual_node": true,
-"__initial_easing": "easing",
-"__initial_scale": "scale",
-"__visibility_strategy": 0,
-"_visibility_strategy_reverted": true
-}
+script = ExtResource("2")
 __anima_visual_editor_data = {
 "0": {
 "animation": {
@@ -194,14 +77,14 @@ __anima_visual_editor_data = {
 "frames": {
 0: {
 "collapsed": false,
-"data": [  ],
+"data": [],
 "duration": null,
 "name": "Initial Frame",
 "type": "frame"
 },
 1: {
 "collapsed": false,
-"data": [ {
+"data": [{
 "animate_as": "AsGroup",
 "animation_name": "back_in_left",
 "delay": null,
@@ -213,10 +96,10 @@ __anima_visual_editor_data = {
 },
 "node_path": ".",
 "property": {
-"easing": [ "Linear", 0 ],
+"easing": ["Linear", 0],
 "from": null,
 "initialValue": null,
-"pivot": [ 0, 0 ],
+"pivot": [0, 0],
 "relative": false,
 "to": null
 },
@@ -235,17 +118,17 @@ __anima_visual_editor_data = {
 },
 "node_path": "./Control/Button2",
 "property": {
-"easing": [ "Linear", 0 ],
+"easing": ["Linear", 0],
 "from": "0",
 "initialValue": null,
-"pivot": [ 0, 0 ],
+"pivot": [0, 0],
 "relative": false,
 "to": "1"
 },
 "property_name": "opacity",
 "property_type": 3,
 "use": "AnimateProperty"
-} ],
+}],
 "duration": null,
 "name": "Frame1",
 "type": "frame"

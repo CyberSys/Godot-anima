@@ -1,13 +1,18 @@
 @tool
-extends Spatial
+extends Node3D
 
-export (bool) var _play_backwards = false
+@export var _play_backwards := false
 
+#const DEFAULT_START_POSITION := Vector3(0, 1.798, 0)
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
-const TOTAL_BOXES := 20
+const TOTAL_BOXES := 0
 const DISTANCE := 0.3
 
-export var _test_me:= false setget set_test_me
+@export var _test_me: bool = false:
+	get:
+		return _test_me
+	set(value):
+		_test_me = value
 
 func _ready():
 	AnimaAnimationsUtils.register_animation('3dboxes', _boxes_animation())
@@ -15,22 +20,23 @@ func _ready():
 
 	_init_boxes($Node)
 
-	if not Engine.editor_hint:
+	if not Engine.is_editor_hint():
 		_do_animation()
 
 func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
 	_reset_boxes_position($Node, start_position)
 
-	var anima: AnimaNode = Anima.begin($Node)
-	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3).debug() )
+	prints($Node.get_child(0), $Node.get_child(0).global_transform.origin)
+	var anima := Anima.begin($Node)
+	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 10).debug() )
 
 	if _play_backwards:
 		_init_reverse_boxes()
 		start_position.z -= 2
 
 	if loop:
-		anima.loop()
+		anima.play()
 	else:
 		anima.play()
 #
@@ -54,33 +60,33 @@ func _ring() -> Dictionary:
 
 func _boxes_animation() -> Dictionary:
 	return {
-		from = {
-			scale = Vector3(0.1, 1, 1),
-			"shader_param:albedo": Color('#6b9eb1')
-		},
-		30: {
-			"shader_param:albedo": Color('#e63946')
-		},
-		35: {
+#		from = {
+#			scale = Vector3(0.1, 1, 1),
+##			"shader_param:albedo" = Color('#6b9eb1')
+#		},
+#		"30" = {
+#			"shader_param:albedo" = Color('#e63946')
+#		},
+		"35" = {
 			x = -28.117,
 			easing = ANIMA.EASING.EASE_OUT_QUAD,
 		},
-		40: {
+		"40" = {
 			x = 0,
-			"shader_param:albedo": Color('#e63946')
+#			"shader_param:albedo" = Color('#e63946')
 		},
-		65: {
+		"65" = {
 			x = 0,
-			scale = Vector3(0.1, 1, 1)
+#			scale = Vector3(0.1, 1, 1) 
 		},
-		85: {
-			scale = Vector3.ZERO,
-		},
+##		"85" = {
+##			scale = Vector3.ZERO,
+##		},
 		to = {
 			x = -25.619,
 			easing = ANIMA.EASING.EASE_IN_CIRC,
-			"rotation:x": 360,
-			"shader_param:albedo": Color('#6b9eb1')
+#			"rotation:x" = 360,
+#			"shader_param:albedo" = Color('#6b9eb1')
 		},
 		relative = ['x', 'rotation:x']
 	}
@@ -107,6 +113,7 @@ func _init_boxes(parentNode: Node) -> void:
 	for i in TOTAL_BOXES:
 		var clone := box.duplicate()
 		clone.global_transform = box.global_transform
+		clone.scale = Vector3(0.1, 1, 1)
 
 		parentNode.add_child(clone)
 
@@ -116,7 +123,7 @@ func _reset_boxes_position(parentNode: Node, start_position: Vector3) -> void:
 
 	for i in parentNode.get_child_count():
 		var box = parentNode.get_child(i)
-		if not box is MeshInstance:
+		if not box is MeshInstance3D:
 			continue
 
 		box.global_transform.origin = start_position + Vector3(DISTANCE, 0, 0) * i

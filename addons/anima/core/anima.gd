@@ -9,7 +9,9 @@ static func begin(node: Node, name: String = 'anima', single_shot := false) -> A
 	var anima_node: AnimaNode
 
 	for child in node.get_children():
-		if child.name.find(node_name) >= 0 and is_instance_valid(child):
+		var child_name: String = String(child.name)
+
+		if child_name.find(node_name) >= 0 and is_instance_valid(child):
 			anima_node = child
 			anima_node.clear()
 			anima_node.stop()

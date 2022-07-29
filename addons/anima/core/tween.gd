@@ -1,7 +1,6 @@
 @tool
-
 class_name AnimaTween
-extends Tween
+extends Node
 
 signal animation_completed
 
@@ -15,6 +14,7 @@ var _loop_strategy = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
 var _tween_started := 0
 var _root_node: Node
+var _tween: Tween
 
 enum PLAY_MODE {
 	NORMAL,
@@ -22,9 +22,26 @@ enum PLAY_MODE {
 	LOOP_IN_CIRCLE
 }
 
+var _frame_key_checker = RegEx.new()
+
+func _enter_tree():
+	var tree := get_tree()
+
+	if tree:
+		_tween = tree.create_tween()
+
+	_tween.set_parallel(true)
+	_tween.pause()
+
+func _exit_tree():
+	_tween.kill()
+
 func _ready():
-	connect("tween_started", self, '_on_tween_started')
-	connect("tween_completed", self, '_on_tween_completed')
+	_frame_key_checker.compile("\\d")
+
+#	print("ready", _tween.get_signal_list())
+#	_tween.connect("tween_started", _on_tween_started)
+	_tween.connect("finished", _on_tween_completed)
 
 	#
 	# By default Godot runs interpolate_property animation runs only once
@@ -39,15 +56,18 @@ func _ready():
 	# So, once all the animations are completed (_tween_completed == _animation_data.size())
 	# we pause the tween, and next time we call play again we resume it and it works...
 	# There is no need to recreating anything on each "loop"
-	set_repeat(true)
+	set_loops(1)
 
 func play(play_speed: float):
-	set_speed_scale(play_speed)
+	_tween.set_speed_scale(play_speed)
 
 	_tween_completed = 0
 
-	resume_all()
+	_tween.play()
 
+func set_loops(loops: int) -> void:
+	_tween.set_loops(loops)
+	
 func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
 	var index: String
 	var is_backwards_animation = play_mode != PLAY_MODE.NORMAL
@@ -75,7 +95,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	var easing_points
 
 	if animation_data.has("easing") and not animation_data.easing == null:
-		if animation_data.easing is FuncRef or animation_data.easing is Array:
+		if animation_data.easing is Callable or animation_data.easing is Array:
 			easing_points = animation_data.easing
 		elif animation_data.easing is Curve:
 			easing_points = animation_data.easing
@@ -106,7 +126,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		use_method = 'animate_with_easing'
 	elif easing_points is String:
 		use_method = 'animate_with_anima_easing'
-	elif easing_points is FuncRef:
+	elif easing_points is Callable:
 		use_method = 'animate_with_easing_funcref'
 	elif easing_points is Curve:
 		use_method = 'animate_with_curve'
@@ -115,25 +135,27 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	var to := 1.0 - from
 
 	object.set_animation_data(animation_data, property_data, is_backwards_animation)
+	var callable := Callable(object, use_method)
 
 	if animation_data.has("__debug"):
 		printt("use_method", use_method)
 
-	interpolate_method(
-		object,
-		use_method,
+	_tween.tween_interval(animation_data._wait_time * 5)
+	_tween.tween_method(
+		callable,
 		0.0,
 		1.0,
-		duration,
-		Tween.TRANS_LINEAR,
-		Tween.EASE_IN_OUT,
-		animation_data._wait_time
+		duration
 	)
 
 	add_child(object)
 
-	if not node.is_connected("tree_exiting", self, "_on_node_tree_exiting"):
-		node.connect("tree_exiting", self, "_on_node_tree_exiting")
+	if not node.is_connected("tree_exiting", _on_node_tree_exiting):
+		node.connect("tree_exiting", _on_node_tree_exiting)
+
+func set_repeat(repeat) -> void:
+	# TODO: Implement
+	pass
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
 	var node: Node = animation_data.node
@@ -243,25 +265,32 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	keyframes_data.erase("initial_values")
 
 	var frame_keys: Array = keyframes_data.keys()
-	frame_keys.sort_custom(self, "_sort_frame_index")
+	frame_keys.sort_custom(_sort_frame_index)
 
-	var percentage = frame_keys[0]
 	var base_data = animation_data.duplicate()
 	var node: Node = animation_data.node
 	var real_duration := 0.0
-	var first_frame_data = keyframes_data[percentage]
+	var first_frame_data: Dictionary = keyframes_data["0"] if keyframes_data.has("0") else {}
 
-	for property_to_animate in first_frame_data:
-		var current_value = AnimaNodesProperties.get_property_value(node, { property = property_to_animate })
-		var value = first_frame_data[property_to_animate]
+	var all_properties_to_animate := []
+
+	for key in keyframes_data:
+		if ["from", "to"].has(key) or _is_valid_frame_key(key):
+			for property_key in keyframes_data[key]:
+				if not all_properties_to_animate.has(property_key) and not property_key == "easing":
+					all_properties_to_animate.push_back(property_key)
+
+	for property_to_animate in all_properties_to_animate:
+		var current_value = AnimaNodesProperties.get_property_value(node, {}, property_to_animate)
+		var value = first_frame_data[property_to_animate] if first_frame_data.has(property_to_animate) else current_value
 
 		if value != null and value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
 
-		if relative_properties.has(property_to_animate):
+		if relative_properties.has(property_to_animate) and first_frame_data.has(property_to_animate):
 			value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
 
-		var data := { percentage = percentage, value = value }
+		var data := { percentage = 0, value = value }
 
 		base_data.property = property_to_animate
 		previous_key_value[property_to_animate] = data
@@ -289,19 +318,22 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	var is_first_frame := true
 	for frame_key in frame_keys:
-		if (not frame_key is int and not frame_key is float) or frame_key > 100:
+		var is_valid_frame_key = _is_valid_frame_key(frame_key)
+		var frame_key_value = str(frame_key).to_float()
+
+		if not is_valid_frame_key or frame_key_value > 100:
 			continue
 
 		var keyframe_data: Dictionary = keyframes_data[frame_key]
 
 		animation_data._is_first_frame = is_first_frame
-		animation_data._is_last_frame = frame_key == 100
+		animation_data._is_last_frame = frame_key_value == 100
 
 		_calculate_frame_data(
 			wait_time,
 			animation_data,
 			relative_properties,
-			frame_key,
+			frame_key_value,
 			keyframes_data[frame_key],
 			previous_key_value
 		)
@@ -310,8 +342,14 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	return real_duration
 
+func _is_valid_frame_key(key) -> bool:
+	if typeof(key) == TYPE_INT or typeof(key) == TYPE_FLOAT:
+		return true
+
+	return _frame_key_checker.search(key) != null
+
 func _sort_frame_index(a, b) -> bool:
-	return int(a) < int(b)
+	return str(a).to_float() < str(b).to_float()
 
 func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relative_properties: Array, current_frame_key: float, frame_data: Dictionary, previous_key_value: Dictionary) -> void:
 	var duration: float = animation_data.duration if animation_data.has('duration') else 0.0
@@ -325,7 +363,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		easing = frame_data.easing
 
 	var node: Node = animation_data.node
-	var is_mesh = node is MeshInstance
+	var is_mesh = node is MeshInstance3D
 	var keys := []
 
 	for key in frame_data.keys():
@@ -356,14 +394,14 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		var frame_duration = max(ANIMA.MINIMUM_DURATION, duration * percentage)
 		var percentage_delay := 0.0
 		var relative = relative_properties.find(property_to_animate) >= 0
-		var initial_key = "__initial_" + property_to_animate
-		var initial_value = node.get_meta(initial_key) if node.has_meta(initial_key) else null
+#		var initial_key = "__initial_" + property_to_animate
+#		var initial_value = node.get_meta(initial_key) if node.has_meta(initial_key) else null
 
 		if start_percentage > 0:
 			percentage_delay += (start_percentage/ 100.0) * duration
 
 		var from_value
-		
+
 		if previous_key_value.has(property_to_animate):
 			from_value = previous_key_value[property_to_animate].value
 		else:
@@ -394,7 +432,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 			if previous_key_value[property_to_animate].has("to"):
 				from_value = previous_key_value[property_to_animate].to
 
-			data.to += initial_value
+			data.to += from_value
 
 		data.property = property_name
 		data.duration = frame_duration
@@ -410,6 +448,8 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			add_animation_data(data)
+		else:
+			prints("\t SKIPPING, from == to", from_value, data.to)
 
 		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }
 
@@ -422,9 +462,14 @@ func get_animations_count() -> int:
 func has_data() -> bool:
 	return _animation_data.size() > 0
 
+func stop() -> void:
+	_tween.stop()
+
 func clear_animations() -> void:
-	remove_all()
-	reset_all()
+	_tween.stop()
+	_tween.kill()
+	
+	_enter_tree()
 
 	for child in get_children():
 		child.queue_free()
@@ -458,7 +503,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 	var previous_frames := {}
 	var length: float = animation_length
 
-	data.invert()
+	data.reverse()
 	for animation in data:
 		if animation.has("_ignore_for_backwards"):
 			continue
@@ -566,13 +611,14 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 
 	return value
 
-func _on_tween_completed(node, _ignore) -> void:
-	node.on_completed()
+func _on_tween_completed() -> void:
+#	node.on_completed()
 
 	_tween_completed += 1
 
-	if _tween_completed >= _animation_data.size() and not is_queued_for_deletion():
-		stop_all()
+	if _tween_completed >= _animation_data.size():
+		_tween.stop()
+#		stop_all()
 
 		emit_signal("animation_completed")
 
@@ -580,11 +626,11 @@ func _on_tween_started(node, _ignore) -> void:
 	node.on_started()
 
 func _on_node_tree_exiting() -> void:
-	stop_all()
+	_tween.stop()
 
 class AnimatedItem extends Node:
 	var _node: Node
-	var _callback: FuncRef
+	var _callback: Callable
 	var _callback_param
 	var _property
 	var _key
@@ -710,14 +756,14 @@ class AnimatedItem extends Node:
 
 	func animate_with_anima_easing(elapsed: float) -> void:
 		var easing_points_function = _animation_data._easing_points
-		var easing_callback = funcref(AnimaEasing, easing_points_function)
-		var easing_elapsed = easing_callback.call_func(elapsed)
+		var easing_callback = Callable(AnimaEasing, easing_points_function)
+		var easing_elapsed = easing_callback.call(elapsed)
 
 		animate(easing_elapsed)
 
 	func animate_with_easing_funcref(elapsed: float) -> void:
 		var easing_callback = _animation_data._easing_points
-		var easing_elapsed = easing_callback.call_func(elapsed)
+		var easing_elapsed = easing_callback.call(elapsed)
 
 		animate(easing_elapsed)
 
@@ -730,19 +776,17 @@ class AnimatedItem extends Node:
 		animate(elapsed)
 
 	func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:
-		var q0 = p0.linear_interpolate(p1, t)
-		var q1 = p1.linear_interpolate(p2, t)
-		var q2 = p2.linear_interpolate(p3, t)
+		var q0 := p0.lerp(p1, t)
+		var q1 := p1.lerp(p2, t)
+		var q2 := p2.lerp(p3, t)
 
-		var r0 = q0.linear_interpolate(q1, t)
-		var r1 = q1.linear_interpolate(q2, t)
+		var r0 := q0.lerp(q1, t)
+		var r1 := q1.lerp(q2, t)
 
-		var s = r0.linear_interpolate(r1, t)
-
-		return s.y
+		return r0.lerp(r1, t).y
 
 	func _execute_callback(callback) -> void:
-		var fn: FuncRef
+		var fn: Callable
 		var args: Array = []
 
 		if callback is Array:
@@ -754,7 +798,7 @@ class AnimatedItem extends Node:
 		else:
 			fn = callback
 
-		fn.call_funcv(args)
+		fn.call(args)
 
 class AnimatedPropertyItem extends AnimatedItem:
 	func apply_value(value) -> void:
@@ -782,7 +826,7 @@ class AnimatedCallback extends AnimatedItem:
 
 class AnimatedCallbackWithParam extends AnimatedItem:
 	func apply_value(value) -> void:
-		_callback.call_funcv([_callback_param, value])
+		_callback.call([_callback_param, value])
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:

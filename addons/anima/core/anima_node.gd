@@ -38,23 +38,25 @@ func _exit_tree():
 		child.free()
 
 func _ready():
-	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
+	if not _anima_tween.is_connected("animation_completed", _on_all_tween_completed):
 		init_node(self)
 
 	_timer.one_shot = true
-	_timer.connect("timeout", self, "_on_timer_completed")
+	_timer.connect("timeout", _on_timer_completed)
 
 	add_child(_timer)
 
 func init_node(node: Node):
-	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
-	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
-
-	add_child(_anima_tween)
-	add_child(_anima_backwards_tween)
+	_anima_tween.connect("animation_completed", _on_all_tween_completed)
+	_anima_backwards_tween.connect("animation_completed", _on_all_tween_completed)
 
 	if node != self:
 		node.add_child(self)
+
+	add_child(_anima_tween)
+	add_child(_anima_backwards_tween)
+#	_anima_tween.init(get_tree().create_tween())
+#	_anima_backwards_tween.init(get_tree().create_tween())
 
 func then(data) -> AnimaNode:
 	if not data is Dictionary:
@@ -180,7 +182,7 @@ func play_backwards_with_delay(delay: float) -> AnimaNode:
 func play_backwards_with_speed(speed: float) -> AnimaNode:
 	return _play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
 
-func _play(mode: int, delay: float = 0, speed := 1.0) -> AnimaNode:
+func _play(mode: int, delay := 0.0, speed := 1.0) -> AnimaNode:
 	if not is_inside_tree():
 		return self
 
@@ -203,8 +205,8 @@ func _on_timer_completed() -> void:
 
 func stop() -> void:
 	if is_instance_valid(_anima_tween):
-		_anima_tween.stop_all()
-		_anima_backwards_tween.stop_all()
+		_anima_tween.stop()
+		_anima_backwards_tween.stop()
 
 func loop(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
@@ -431,7 +433,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 
 	for child in children:
 		# Skip current node :)
-		if '__do_nothing' in child or not (child is Spatial or child is CanvasItem):
+		if '__do_nothing' in child or not (child is Node3D or child is CanvasItem):
 			continue
 		elif animation_data.has('skip_hidden') and not child.is_visible():
 			continue

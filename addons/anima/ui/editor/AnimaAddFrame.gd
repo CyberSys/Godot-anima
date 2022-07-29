@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 var _is_collapsed_mode := true

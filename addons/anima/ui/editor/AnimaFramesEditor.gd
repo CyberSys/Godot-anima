@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 const FRAME_ANIMATION = preload("res://addons/anima/ui/editor/AnimaFrameAnimation.tscn")

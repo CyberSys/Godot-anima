@@ -1,4 +1,4 @@
-tool
+@tool
 extends AnimaAnimatable
 class_name AnimaAccordion
 

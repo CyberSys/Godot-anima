@@ -1,4 +1,4 @@
-tool
+@tool
 extends Button
 
 export (String) var icon_name setget set_icon_name

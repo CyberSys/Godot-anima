@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 signal frame_deleted

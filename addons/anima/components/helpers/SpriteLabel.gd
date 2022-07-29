@@ -1,4 +1,4 @@
-tool
+@tool
 extends Sprite
 
 var label := 'AnimaLabel' setget set_label

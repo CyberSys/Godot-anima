@@ -1,4 +1,4 @@
-tool
+@tool
 class_name AnimaNode
 extends Node
 
@@ -306,7 +306,7 @@ func set_default_duration(duration: float) -> AnimaNode:
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
-		 data.duration = _default_duration
+		data.duration = _default_duration
 
 	if not data.has('property') and not data.has("animation"):
 		printerr('Please specify the property to animate or the animation to use!', data)
@@ -326,7 +326,7 @@ func _setup_animation(data: Dictionary) -> float:
 
 		return _setup_grid_animation(data)
 	elif not data.has("node"):
-		 data.node = self.get_parent()
+		data.node = self.get_parent()
 
 	if data.node == null:
 		printerr("Invalid node!")

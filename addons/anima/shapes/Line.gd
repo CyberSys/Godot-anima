@@ -1,4 +1,4 @@
-tool
+@tool
 class_name AnimaLine
 extends AnimaShape
 

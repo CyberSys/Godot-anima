@@ -1,4 +1,4 @@
-tool
+@tool
 extends MarginContainer
 
 onready var value = find_node("Value")

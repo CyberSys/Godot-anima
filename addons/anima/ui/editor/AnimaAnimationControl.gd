@@ -1,4 +1,4 @@
-tool
+@tool
 extends MarginContainer
 
 signal animation_updated

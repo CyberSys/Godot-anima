@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 signal switch_position

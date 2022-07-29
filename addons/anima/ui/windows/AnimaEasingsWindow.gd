@@ -1,4 +1,4 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal easing_selected(easing_name, easing_value)

@@ -1,4 +1,4 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal node_selected(node, path)

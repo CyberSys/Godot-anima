@@ -1,4 +1,4 @@
-tool
+@tool
 extends VBoxContainer
 
 signal select_animation

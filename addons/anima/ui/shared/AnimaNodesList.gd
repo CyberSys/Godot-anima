@@ -1,4 +1,4 @@
-tool
+@tool
 extends VBoxContainer
 
 signal node_selected(node, path)

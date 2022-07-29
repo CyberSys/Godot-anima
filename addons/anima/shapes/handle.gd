@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 const HANDLE_SIZE := 10

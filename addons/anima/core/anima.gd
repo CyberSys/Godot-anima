@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 var _animations_list := []

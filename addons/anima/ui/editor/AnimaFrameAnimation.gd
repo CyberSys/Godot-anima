@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 onready var ANIMATION_DATA = preload("res://addons/anima/ui/editor/AnimaAnimationData.tscn")

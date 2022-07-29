@@ -1,4 +1,4 @@
-tool
+@tool
 extends Spatial
 
 export (bool) var _play_backwards = false

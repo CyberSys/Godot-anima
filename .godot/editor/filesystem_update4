@@ -1,0 +1,5 @@
+res://addons/anima/core/anima_node.gd
+res://addons/anima/core/costants.gd
+res://addons/anima/core/easings.gd
+res://addons/anima/ui/AnimaUI.gd
+res://demos/DemosSelector.tscn

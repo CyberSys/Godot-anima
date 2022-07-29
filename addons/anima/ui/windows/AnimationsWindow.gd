@@ -1,4 +1,4 @@
-tool
+@tool
 extends "./AnimaBaseWindow.gd"
 
 signal animation_selected(label, name)

@@ -1,4 +1,4 @@
-tool
+@tool
 extends AnimaRectangle
 class_name AnimaButton, "res://addons/anima/icons/button.svg"
 

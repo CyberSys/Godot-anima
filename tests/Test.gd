@@ -72,13 +72,12 @@ func _ready():
 		.play()
 
 
-	var tween = create_tween().set_loops().set_parallel(true)
-	tween.tween_property($Button, "position:x", 200.0, 1).as_relative()
+	var tween = create_tween().set_parallel(true)
+	tween.tween_property($Button, "position:x", 200.0, 4).as_relative()
 	tween.tween_callback(jump)
-	tween.tween_interval(2)
-	tween.tween_property($Button, "position:x", -200.0, 1).as_relative()
+	tween.chain().tween_interval(2)
+	tween.tween_property($Button, "position:y", 200.0, 4).as_relative()
 	tween.tween_callback(jump)
-	tween.tween_interval(2)
 
 func jump() -> void:
 	print("jump")

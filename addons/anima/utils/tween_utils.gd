@@ -39,7 +39,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 
 	if animation_data.has("__debug"):
 		print("")
-		printt("Node Name:", animation_data.node.name, "property", animation_data.property, "from", from, "to", to, "current_value", current_value)
+		printt("Node Name:", animation_data.node.name, ", property: ", animation_data.property, ", from: ", from, ", to: ", to, ", current_value: ", current_value)
 		printt("", animation_data)
 
 	if typeof(to) == TYPE_RECT2:
@@ -183,9 +183,9 @@ static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
 		for percentage in key:
 			if percentage is String:
 				if percentage == "from":
-					percentage = 0
+					percentage = "0"
 				elif percentage == "to":
-					percentage = 100
+					percentage = "100"
 
 			if not result.has(percentage):
 				result[percentage] = {}

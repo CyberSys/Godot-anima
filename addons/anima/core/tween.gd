@@ -84,9 +84,15 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data.initial_values = {}
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
 
+		if animation_data.has("__debug"):
+			prints("Applying initial value", animation_data.initial_value)
+
 	var ignore_initial_values = animation_data.has("_ignore_initial_values") and animation_data._ignore_initial_values
 
 	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
+		if animation_data.has("__debug"):
+			prints("Applying initial values", animation_data.initial_values)
+
 		if not animation_data.has("to"):
 			printerr("When using '_initial_value' the 'to' cannot be empty!")
 		else:
@@ -140,13 +146,12 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if animation_data.has("__debug"):
 		printt("use_method", use_method)
 
-	_tween.tween_interval(animation_data._wait_time * 5)
 	_tween.tween_method(
 		callable,
 		0.0,
 		1.0,
 		duration
-	)
+	).set_delay(animation_data._wait_time)
 
 	add_child(object)
 
@@ -164,7 +169,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		var value = animation_data.initial_values[property]
 		var property_data = AnimaNodesProperties.map_property_to_godot_property(node, property)
 		var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
-		var is_object = typeof(property_data.property) == TYPE_OBJECT
+		var is_object = property_data.has("property") and typeof(property_data.property) == TYPE_OBJECT
 
 		if value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, animation_data)
@@ -175,12 +180,19 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		elif is_object:
 			push_warning("not yet implemented")
 			pass
+		elif property_data.has("callback"):
+			print(node, property_data.callback)
+			push_warning("not yet implemented")
+			pass
 		elif property_data.has('subkey'):
 			node[property_data.property][property_data.key][property_data.subkey] = value
 		elif property_data.has('key'):
 			node[property_data.property][property_data.key] = value
 		else:
 			node[property_data.property] = value
+
+		if animation_data.has("__debug"):
+			printt("", "Initial value", property, value, property_data)
 
 func _get_animated_object_item(property_data: Dictionary) -> Node:
 	var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
@@ -284,7 +296,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 		var current_value = AnimaNodesProperties.get_property_value(node, {}, property_to_animate)
 		var value = first_frame_data[property_to_animate] if first_frame_data.has(property_to_animate) else current_value
 
-		if value != null and value is String:
+		if value is String:
 			value = AnimaTweenUtils.maybe_calculate_value(value, base_data)
 
 		if relative_properties.has(property_to_animate) and first_frame_data.has(property_to_animate):
@@ -328,6 +340,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 		animation_data._is_first_frame = is_first_frame
 		animation_data._is_last_frame = frame_key_value == 100
+
+		var is_relative: bool = relative_properties.find(frame_key)
 
 		_calculate_frame_data(
 			wait_time,
@@ -447,8 +461,11 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 			prints("\n=== FRAME", data.property, ":", data.from, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", data.easing, " is relative:", str(relative))
 
 		if typeof(from_value) != typeof(data.to) or from_value != data.to:
+			if animation_data._is_first_frame and not relative:
+				data.initial_value = data.from
+
 			add_animation_data(data)
-		else:
+		elif animation_data.has("__debug"):
 			prints("\t SKIPPING, from == to", from_value, data.to)
 
 		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }

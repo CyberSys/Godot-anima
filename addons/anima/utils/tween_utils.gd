@@ -37,7 +37,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if from is Vector2 and to is Vector3:
 		to = Vector2(to.x, to.y)
 
-	if animation_data.has("__debug"):
+	if animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == animation_data.property):
 		print("")
 		printt("Node Name:", animation_data.node.name, ", property: ", animation_data.property, ", from: ", from, ", to: ", to, ", current_value: ", current_value)
 		printt("", animation_data)

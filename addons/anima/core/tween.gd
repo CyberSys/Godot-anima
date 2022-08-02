@@ -81,16 +81,18 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		_apply_visibility_strategy(animation_data)
 
 	if animation_data.has("initial_value"):
-		animation_data.initial_values = {}
+		if not animation_data.has("initial_values"):
+			animation_data.initial_values = {}
+
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
 
-		if animation_data.has("__debug"):
+		if animation_data.has("__debug") and (animation_data.__debug == true or animation_data.__debug == animation_data.property):
 			prints("Applying initial value", animation_data.initial_value)
 
 	var ignore_initial_values = animation_data.has("_ignore_initial_values") and animation_data._ignore_initial_values
 
 	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
-		if animation_data.has("__debug"):
+		if animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == animation_data.property):
 			prints("Applying initial values", animation_data.initial_values)
 
 		if not animation_data.has("to"):
@@ -143,7 +145,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	object.set_animation_data(animation_data, property_data, is_backwards_animation)
 	var callable := Callable(object, use_method)
 
-	if animation_data.has("__debug"):
+	if animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == animation_data.property):
 		printt("use_method", use_method)
 
 	_tween.tween_method(
@@ -181,8 +183,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 			push_warning("not yet implemented")
 			pass
 		elif property_data.has("callback"):
-			print(node, property_data.callback)
-			push_warning("not yet implemented")
+			property_data.callback.call(property_data.param, value)
 			pass
 		elif property_data.has('subkey'):
 			node[property_data.property][property_data.key][property_data.subkey] = value
@@ -191,7 +192,7 @@ func _apply_initial_values(animation_data: Dictionary) -> void:
 		else:
 			node[property_data.property] = value
 
-		if animation_data.has("__debug"):
+		if animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == animation_data.property):
 			printt("", "Initial value", property, value, property_data)
 
 func _get_animated_object_item(property_data: Dictionary) -> Node:
@@ -306,7 +307,10 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 		base_data.property = property_to_animate
 		previous_key_value[property_to_animate] = data
-		node.set_meta("__initial_" + property_to_animate, current_value)
+		node.set_meta("__initial_" + str(property_to_animate), current_value)
+
+		if current_value != value and relative_properties.find(property_to_animate) < 0:
+			data.initial_value = value
 
 	frame_keys.pop_front()
 
@@ -353,6 +357,8 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 		)
 
 		animation_data.erase("initial_values")
+
+		is_first_frame= false
 
 	return real_duration
 
@@ -408,8 +414,6 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		var frame_duration = max(ANIMA.MINIMUM_DURATION, duration * percentage)
 		var percentage_delay := 0.0
 		var relative = relative_properties.find(property_to_animate) >= 0
-#		var initial_key = "__initial_" + property_to_animate
-#		var initial_value = node.get_meta(initial_key) if node.has_meta(initial_key) else null
 
 		if start_percentage > 0:
 			percentage_delay += (start_percentage/ 100.0) * duration
@@ -438,7 +442,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 			if to_value is Vector3:
 				to_value = Vector2(to_value.x, to_value.y)
 
-		var property_name = property_to_animate
+		var property_name: String = property_to_animate
 
 		data.to = AnimaTweenUtils.maybe_calculate_value(to_value, data)
 
@@ -454,18 +458,23 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		data.easing = easing
 		data.from = from_value
 
-		if property_name == "opacity":
+		if property_name == "opacity" or property_name.begins_with("shader_param"):
 			data.easing = null
 
-		if animation_data.has("__debug"):
+		if animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == data.property):
 			prints("\n=== FRAME", data.property, ":", data.from, " --> ", data.to, "wait time:", data._wait_time, "duration:", data.duration, "easing:", data.easing, " is relative:", str(relative))
 
-		if typeof(from_value) != typeof(data.to) or from_value != data.to:
-			if animation_data._is_first_frame and not relative:
-				data.initial_value = data.from
+		if previous_key_value.has(property_to_animate) and previous_key_value[property_to_animate].has("initial_value"):
+			if not data.has("initial_values"):
+				data.initial_values = {}
 
+			data.initial_values[property_to_animate] = previous_key_value[property_to_animate].initial_value
+
+			_apply_initial_values(data)
+
+		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			add_animation_data(data)
-		elif animation_data.has("__debug"):
+		elif animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == data.property):
 			prints("\t SKIPPING, from == to", from_value, data.to)
 
 		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }
@@ -732,7 +741,7 @@ class AnimatedItem extends Node:
 		_node = data.node
 		_node.remove_meta("_visibility_strategy_reverted")
 
-		if _animation_data.has("__debug"):
+		if _animation_data.has("__debug") and (_animation_data.__debug == "true" or _animation_data.__debug == _animation_data.property):
 			print("Using:")
 			printt("", property_data)
 			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
@@ -746,7 +755,7 @@ class AnimatedItem extends Node:
 		if _property_data.size() == 0:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
 
-			if _animation_data.has("__debug"):
+			if _animation_data.has("__debug") and (_animation_data.__debug == "true" or _animation_data.__debug == _animation_data.property):
 				printt("_property_data", _property_data)
 				print("")
 
@@ -843,7 +852,7 @@ class AnimatedCallback extends AnimatedItem:
 
 class AnimatedCallbackWithParam extends AnimatedItem:
 	func apply_value(value) -> void:
-		_callback.call([_callback_param, value])
+		_callback.call(_callback_param, value)
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:

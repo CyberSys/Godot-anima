@@ -5,7 +5,7 @@ extends Node3D
 
 #const DEFAULT_START_POSITION := Vector3(0, 1.798, 0)
 const DEFAULT_START_POSITION := Vector3(23.142, 1.798, 0)
-const TOTAL_BOXES := 0
+const TOTAL_BOXES := 20
 const DISTANCE := 0.3
 
 @export var _test_me: bool = false:
@@ -27,9 +27,8 @@ func _do_animation(loop:= true) -> void:
 	var start_position: Vector3 = DEFAULT_START_POSITION
 	_reset_boxes_position($Node, start_position)
 
-	prints($Node.get_child(0), $Node.get_child(0).global_transform.origin)
 	var anima := Anima.begin($Node)
-	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 10) )
+	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
 
 	if _play_backwards:
 		_init_reverse_boxes()
@@ -65,7 +64,7 @@ func _boxes_animation() -> Dictionary:
 			"shader_param:albedo" = Color('#6b9eb1')
 		},
 		"30" = {
-			"shader_param:albedo" = Color('#e63946')
+			"shader_param:albedo" = Color('#6b9eb1')
 		},
 		"35" = {
 			x = -28.117,

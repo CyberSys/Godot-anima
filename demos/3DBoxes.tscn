@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://ddjy1idltb7sm"]
 
 [ext_resource type="Script" path="res://demos/3DBoxes.gd" id="1"]
-[ext_resource type="ArrayMesh" uid="uid://cnhfiiqv10b2n" path="res://demos/resources/ring.obj" id="2"]
+[ext_resource type="ArrayMesh" uid="uid://c741wxmi6v7td" path="res://demos/resources/ring.obj" id="2"]
 [ext_resource type="PackedScene" path="res://demos/components/ShowAllDemos.tscn" id="3"]
 
 [sub_resource type="StandardMaterial3D" id="1"]

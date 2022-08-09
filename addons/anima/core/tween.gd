@@ -25,13 +25,13 @@ enum PLAY_MODE {
 var _frame_key_checker = RegEx.new()
 
 func _enter_tree():
-	var tree := get_tree()
+	var tree: SceneTree = get_tree()
 
 	if tree:
 		_tween = tree.create_tween()
 
-	_tween.set_parallel(true)
-	_tween.pause()
+		_tween.set_parallel(true)
+		_tween.pause()
 
 func _exit_tree():
 	_tween.kill()
@@ -56,7 +56,7 @@ func _ready():
 	# So, once all the animations are completed (_tween_completed == _animation_data.size())
 	# we pause the tween, and next time we call play again we resume it and it works...
 	# There is no need to recreating anything on each "loop"
-	set_loops(1)
+	set_loops(0)
 
 func play(play_speed: float):
 	_tween.set_speed_scale(play_speed)
@@ -307,7 +307,7 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 		base_data.property = property_to_animate
 		previous_key_value[property_to_animate] = data
-		node.set_meta("__initial_" + str(property_to_animate), current_value)
+		# node.set_meta("__initial_" + str(property_to_animate), current_value)
 
 		if current_value != value and relative_properties.find(property_to_animate) < 0:
 			data.initial_value = value

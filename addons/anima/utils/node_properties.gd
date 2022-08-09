@@ -221,7 +221,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		"x", "position:x":
 			if node is Control:
 				return {
-					property = "rect_position",
+					property = "position",
 					key = "x",
 				}
 
@@ -233,7 +233,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		"y", "position:y":
 			if node is Control:
 				return {
-					property = "rect_position",
+					property = "position",
 					key = "y",
 				}
 
@@ -243,23 +243,11 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				subkey = "y"
 			}
 		"width":
-			if node is Control:
-				return {
-					property = "rect_size",
-					key = "x",
-				}
-
 			return {
 				property = "size",
 				key = "x",
 			}
 		"height":
-			if node is Control:
-				return {
-					property = "rect_size",
-					key = "y",
-				}
-
 			return {
 				property = "size",
 				key = "y",
@@ -276,7 +264,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		"position":
 			if node is Control:
 				return {
-					property = "rect_position"
+					property = "position"
 				}
 			
 			return {

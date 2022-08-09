@@ -28,7 +28,7 @@ func _do_animation(loop:= true) -> void:
 	_reset_boxes_position($Node, start_position)
 
 	var anima := Anima.begin($Node)
-	anima.then( Anima.Group($Node, 0.02).anima_animation('3dboxes', 3) )
+	anima.then( Anima.Group($Node, 0.04).anima_animation('3dboxes', 3) )
 
 	if _play_backwards:
 		_init_reverse_boxes()

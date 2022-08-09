@@ -297,9 +297,11 @@ func _do_play() -> void:
 	else:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
-func set_loop_strategy(strategy: int):
+func set_loop_strategy(strategy: int) -> AnimaNode:
 	_anima_tween.set_loop_strategy(strategy)
 	_anima_backwards_tween.set_loop_strategy(strategy)
+
+	return self
 
 func set_default_duration(duration: float) -> AnimaNode:
 	_default_duration = duration

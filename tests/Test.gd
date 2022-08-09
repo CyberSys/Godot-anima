@@ -68,16 +68,18 @@ func _ready():
 #
 
 	anima = Anima.begin(self) \
-		.then(Anima.Node($CanvasModulate).anima_property("color", Color.REBECCA_PURPLE, 5.5)) \
-		.play()
+		.then(Anima.Node($Button2).anima_position_x(300, 1).anima_from(100)) \
+		.then(Anima.Node($Button2).anima_relative_position_y(300, 1)) \
+		.set_loop_strategy(ANIMA.LOOP_STRATEGY.RECALCULATE_RELATIVE_DATA) \
+		.loop()
 
-
-	var tween = create_tween().set_parallel(true)
-	tween.tween_property($Button, "position:x", 200.0, 4).as_relative()
-	tween.tween_callback(jump)
-	tween.chain().tween_interval(2)
-	tween.tween_property($Button, "position:y", 200.0, 4).as_relative()
-	tween.tween_callback(jump)
+#
+#	var tween = create_tween().set_parallel(true)
+#	tween.tween_property($Button, "position:x", 200.0, 4).as_relative()
+#	tween.tween_callback(jump)
+#	tween.chain().tween_interval(2)
+#	tween.tween_property($Button, "position:y", 200.0, 4).as_relative()
+#	tween.tween_callback(jump)
 
 func jump() -> void:
 	print("jump")

@@ -53,6 +53,11 @@ anchor_bottom = 1.828
 [node name="Button7" type="Button" parent="Control"]
 
 [node name="Button2" type="Button" parent="."]
+offset_left = 300.0
+offset_top = 86.7026
+offset_right = 345.0
+offset_bottom = 117.703
+pivot_offset = Vector2(22.5, 15.5)
 text = "Do it"
 
 [node name="Timer" type="Timer" parent="."]

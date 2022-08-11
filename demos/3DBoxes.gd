@@ -38,29 +38,29 @@ func _do_animation(loop:= true) -> void:
 		anima.play()
 	else:
 		anima.play()
-#
-#	var ring: AnimaNode = Anima.begin($ring)
-#	ring.then( Anima.Node($ring).anima_animation('ring', 3) )
-#
-#	if _play_backwards:
-#		ring.loop_backwards()
-#	else:
-#		ring.loop()
+
+	var ring: AnimaNode = Anima.begin($ring)
+	ring.then( Anima.Node($ring).anima_animation('ring', 3) )
+
+	if _play_backwards:
+		ring.loop_backwards()
+	else:
+		ring.loop()
 
 func _ring() -> Dictionary:
 	return { 
 		from = {
-			"rotation:x": 0, 
+			"rotation:z": 0, 
 		},
 		to = {
-			"rotation:x": 360
+			"rotation:z": 360
 		}
 	}
 
 func _boxes_animation() -> Dictionary:
 	return {
 		from = {
-			scale = Vector3(0.1, 1, 1),
+			scale = Vector3(0.09, 1, 1),
 			"shader_param:albedo" = Color('#6b9eb1')
 		},
 		"30" = {
@@ -108,11 +108,11 @@ func _init_reverse_boxes() -> void:
 
 func _init_boxes(parentNode: Node) -> void:
 	var box := parentNode.get_child(0)
+	box.scale = Vector3(0.1, 1, 1)
 
 	for i in TOTAL_BOXES:
 		var clone := box.duplicate()
 		clone.global_transform = box.global_transform
-		clone.scale = Vector3(0.1, 1, 1)
 
 		parentNode.add_child(clone)
 

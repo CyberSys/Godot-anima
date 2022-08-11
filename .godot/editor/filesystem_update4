@@ -1,6 +1,7 @@
 res://tests/Test.tscn
+res://tests/Test.gd
 res://demos/DemosSelector.tscn
 res://demos/3DBoxes.tscn
-res://tests/Test.gd
 res://addons/anima/core/tween.gd
-res://addons/anima/core/anima_node.gd
+res://demos/3DBoxes.gd
+res://addons/anima/utils/animations.gd

@@ -1,7 +1,7 @@
-res://tests/Test.tscn
-res://tests/Test.gd
 res://demos/DemosSelector.tscn
-res://demos/3DBoxes.tscn
+res://addons/anima/core/keyframe-engine.gd
 res://addons/anima/core/tween.gd
+res://demos/3DBoxes.tscn
 res://demos/3DBoxes.gd
+res://addons/anima/core/anima_node.gd
 res://addons/anima/utils/animations.gd

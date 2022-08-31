@@ -107,3 +107,7 @@ static func _get_scripts_in_dir(path: String, files: Array = []) -> Array:
 		file_name = dir.get_next()
 
 	return files
+
+
+func sort_frame_index(a, b) -> bool:
+	return str(a).to_float() < str(b).to_float()

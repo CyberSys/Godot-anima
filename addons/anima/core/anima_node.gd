@@ -366,7 +366,18 @@ func _setup_node_animation(data: Dictionary) -> float:
 
 					return duration
 
-			var real_duration = _anima_tween.add_frames(data, keyframes)
+			var result = AnimaKeyframeEngine.parse_animation(
+				data,
+				keyframes,
+			)
+
+			for initial_values in result.initial_values:
+				_anima_tween._apply_initial_values(initial_values)
+
+			for animation_data in result.animations_data:
+				_anima_tween.add_animation_data(animation_data)
+
+			var real_duration = result.real_duration
 
 			if real_duration > 0:
 				duration = real_duration

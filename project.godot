@@ -14,11 +14,6 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/anima/utils/animations.gd"
 }, {
-"base": "Reference",
-"class": &"AnimaAwaitableAddChild",
-"language": &"GDScript",
-"path": "res://addons/anima/core/deferred_add_child.gd"
-}, {
 "base": "Object",
 "class": &"AnimaDeclarationBase",
 "language": &"GDScript",
@@ -65,6 +60,11 @@ _global_script_classes=[{
 "path": "res://addons/anima/core/easings.gd"
 }, {
 "base": "Node",
+"class": &"AnimaKeyframeEngine",
+"language": &"GDScript",
+"path": "res://addons/anima/core/keyframe-engine.gd"
+}, {
+"base": "Node",
 "class": &"AnimaNode",
 "language": &"GDScript",
 "path": "res://addons/anima/core/anima_node.gd"
@@ -106,7 +106,6 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "AnimaAnimationsUtils": "",
-"AnimaAwaitableAddChild": "",
 "AnimaDeclarationBase": "",
 "AnimaDeclarationForAnimation": "",
 "AnimaDeclarationForProperty": "",
@@ -116,6 +115,7 @@ _global_script_class_icons={
 "AnimaDeclarationNode": "",
 "AnimaDeclarationNodes": "",
 "AnimaEasing": "",
+"AnimaKeyframeEngine": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
 "AnimaPropertyList": "",

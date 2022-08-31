@@ -85,7 +85,7 @@ static func parse_animation(
 		if relative_properties.has(property_to_animate) and first_frame_data.has(property_to_animate):
 			value += AnimaNodesProperties.get_property_value(animation_data.node, animation_data, property_to_animate)
 
-		var data := { percentage = 0, value = value }
+		var data := { percentage = 0, value = value, has_initial_value = first_frame_data.has(property_to_animate) }
 
 		base_data.property = property_to_animate
 		previous_key_value[property_to_animate] = data
@@ -274,8 +274,33 @@ static func _calculate_frame_data(
 
 		if typeof(from_value) != typeof(data.to) or from_value != data.to:
 			animations_data.push_back(data)
+		#
+		# Let's consider:
+		#
+		#	0: {
+		#		opacity = 0,
+		#		y = 100,
+		#		easing = [0.55, 0.055, 0.675, 0.19],
+		#	},
+		#	60: {
+		#		opacity = 1,
+		#		scale = Vector2(0.475, 0.475),
+		#		y = 100,
+		#		easing = [0.55, 0.055, 0.675, 0.19]
+		#	},
+		#	100: {
+		#		scale = Vector2(1, 1),
+		#		y = 0
+		#	}
+		# we don't have an initial scale value, this means that at the animation we need to "reset" it
+		# to whatever value we had when we generated the animation.
+		#
+		elif previous_key_value.has(property_to_animate) and previous_key_value[property_to_animate].has('has_initial_value') and not previous_key_value[property_to_animate].has_initial_value:
+			data.duration = ANIMA.MINIMUM_DURATION
+
+			animations_data.push_back(data)
 		elif animation_data.has("__debug") and (animation_data.__debug == "true" or animation_data.__debug == data.property):
-			prints("\t SKIPPING, from == to", from_value, data.to)
+			prints("\t SKIPPING, from == to", from_value, data.to, '@ frame', percentage, previous_key_value[property_to_animate])
 
 		previous_key_value[property_to_animate] = { percentage = current_frame_key, value = frame_data[property_to_animate], to = data.to }
 

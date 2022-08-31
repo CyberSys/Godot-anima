@@ -60,7 +60,6 @@ func _ring() -> Dictionary:
 func _boxes_animation() -> Dictionary:
 	return {
 		from = {
-			scale = Vector3(0.09, 1, 1),
 			"shader_param:albedo" = Color('#6b9eb1')
 		},
 		"30" = {

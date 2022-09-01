@@ -39,7 +39,7 @@ static func get_rotation(node: Node):
 	if node is Control:
 		return node.rotation
 	elif node is Node2D:
-		return node.rotation_degrees
+		return node.rotation
 
 	return node.rotation
 
@@ -295,13 +295,8 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		"rotation", "rotate":
 			var property_name = "rotation"
 
-			if node is Control:
-				property_name = "rect_rotation"
-			elif node is Node2D:
-				property_name = "rotation_degrees"
-
 			return {
-				property = property_name
+				property = "rotation"
 			}
 		"rotation:x", "rotate:x":
 			return {

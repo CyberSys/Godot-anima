@@ -5,3 +5,15 @@ res://demos/3DBoxes.tscn
 res://demos/3DBoxes.gd
 res://addons/anima/core/anima_node.gd
 res://addons/anima/utils/animations.gd
+res://demos/AnimationsPreview.tscn
+res://demos/AnimationsPreview.gd
+res://addons/anima/animations/attention_seeker/bounce.gd
+res://addons/anima/animations/attention_seeker/headshake.gd
+res://addons/anima/utils/node_properties.gd
+res://addons/anima/animations/attention_seeker/heartbeat.gd
+res://addons/anima/animations/attention_seeker/pulse.gd
+res://demos/Easings.gd
+res://demos/nodes/SequenceWithParallel.tscn
+res://demos/nodes/SequenceWithParallel.gd
+res://demos/nodes/SequenceWithParallelBackwards.tscn
+res://demos/nodes/SequenceWithParallelBackwards.gd

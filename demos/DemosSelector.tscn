@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c6qjap3qob780"]
+[gd_scene load_steps=3 format=3 uid="uid://c6qjap3qob780"]
 
 [ext_resource type="Script" path="res://demos/DemosSelector.gd" id="2"]
+[ext_resource type="PackedScene" path="res://demos/components/Button.tscn" id="3"]
 
 [node name="DemoSelector" type="VBoxContainer"]
 anchor_right = 1.0
@@ -19,3 +20,92 @@ offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
+
+[node name="Animations" parent="Control" instance=ExtResource("3")]
+offset_right = 510.0
+offset_bottom = 92.0
+theme_override_font_sizes/font_size = 18
+scene = "res://demos/AnimationsPreview.tscn"
+
+[node name="Easings" parent="Control" instance=ExtResource("3")]
+offset_left = 514.0
+offset_right = 1024.0
+offset_bottom = 92.0
+theme_override_font_sizes/font_size = 18
+text = "Built-in easings"
+scene = "res://demos/Easings.tscn"
+
+[node name="SequentialAnParallel" parent="Control" instance=ExtResource("3")]
+offset_top = 96.0
+offset_right = 510.0
+offset_bottom = 188.0
+text = "Sequential and parallel animation"
+scene = "res://demos/SequenceAndParallel.tscn"
+
+[node name="SequentialAnParallel2" parent="Control" instance=ExtResource("3")]
+offset_left = 514.0
+offset_top = 96.0
+offset_right = 1024.0
+offset_bottom = 188.0
+text = "Sequential with paralel animation"
+scene = "res://demos/nodes/SequenceWithParallel.tscn"
+
+[node name="SequentialAnParallel3" parent="Control" instance=ExtResource("3")]
+offset_top = 192.0
+offset_right = 510.0
+offset_bottom = 284.0
+text = "Sequential with paralel animation - Backwards"
+scene = "res://demos/SequenceWithParallelBackwards.tscn"
+
+[node name="ButtonCallbacks" parent="Control" instance=ExtResource("3")]
+offset_left = 514.0
+offset_top = 192.0
+offset_right = 1024.0
+offset_bottom = 284.0
+text = "Sequence animation and callbacks"
+scene = "res://demos/SequenceCallback.tscn"
+
+[node name="Group" parent="Control" instance=ExtResource("3")]
+offset_top = 288.0
+offset_right = 510.0
+offset_bottom = 380.0
+text = "Animate Group"
+scene = "res://demos/Stagger.tscn"
+
+[node name="2DGrid" parent="Control" instance=ExtResource("3")]
+offset_left = 514.0
+offset_top = 288.0
+offset_right = 1024.0
+offset_bottom = 380.0
+text = "Animate 2D Grid"
+scene = "res://demos/2DGrid.tscn"
+
+[node name="3DRings" parent="Control" instance=ExtResource("3")]
+offset_top = 384.0
+offset_right = 510.0
+offset_bottom = 475.0
+text = "3D Rings"
+scene = "res://demos/Rings.tscn"
+
+[node name="3DBoxes" parent="Control" instance=ExtResource("3")]
+offset_left = 514.0
+offset_top = 384.0
+offset_right = 1024.0
+offset_bottom = 475.0
+text = "3D Boxes"
+scene = "res://demos/3DBoxes.tscn"
+
+[node name="3DBoxes - Backwards" parent="Control" instance=ExtResource("3")]
+offset_top = 479.0
+offset_right = 510.0
+offset_bottom = 570.0
+text = "3D Boxes - Backwards"
+scene = "res://demos/3DBoxesReverse.tscn"
+
+[node name="3D Grid" parent="Control" instance=ExtResource("3")]
+offset_left = 514.0
+offset_top = 479.0
+offset_right = 1024.0
+offset_bottom = 570.0
+text = "3D Grid"
+scene = "res://demos/Grid.tscn"

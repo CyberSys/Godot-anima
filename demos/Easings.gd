@@ -25,7 +25,7 @@ func _ready():
 			$Container/PanelContainer/PanelContainer/HBoxContainer/In/GridIn.add_child(button)
 
 func _on_easing_button_pressed(easing_value: int) -> void:
-	var size = self.rect_size
+	var size = self.size
 	var logo_size = AnimaNodesProperties.get_size($Container/SpriteContainer/Anima)
 
 	Anima.begin(self, 'easings') \

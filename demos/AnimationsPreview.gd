@@ -48,7 +48,7 @@ func create_new_header(text: String) -> PanelContainer:
 func _on_animation_button_pressed(button: Button) -> void:
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = str($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text).to_float()
 
 	_play_animation($HBoxContainer/VBoxContainer/ControlContainer/ControlTest, button)
 	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
@@ -56,7 +56,7 @@ func _on_animation_button_pressed(button: Button) -> void:
 func _play_animation(node: Node, button: Button):
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = str($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text).to_float()
 	var parent = node.get_parent()
 	var clone = node.duplicate()
 
@@ -67,7 +67,7 @@ func _play_animation(node: Node, button: Button):
 	node.hide()
 
 	var anima = Anima.begin(clone, 'control_test')
-	anima.then( Anima.Node(clone).anima_animation(script_name, duration).debug() )
+	anima.then( Anima.Node(clone).anima_animation(script_name, duration) )
 	anima.play()
 	
 	await anima.animation_completed

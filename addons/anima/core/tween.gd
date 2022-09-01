@@ -6,8 +6,6 @@ signal animation_completed
 
 const VISIBILITY_STRATEGY_META_KEY = "__visibility_strategy"
 
-var PROPERTIES_TO_ATTENUATE = ["rotate", "rotation", "rotation:y", "rotate:y", "y", "position:y", "x"]
-
 var _animation_data := []
 var _callbacks := {}
 var _loop_strategy = ANIMA.LOOP_STRATEGY.USE_EXISTING_RELATIVE_DATA
@@ -235,7 +233,8 @@ func clear_animations() -> void:
 	_tween.stop()
 	_tween.kill()
 	
-	_enter_tree()
+	if is_inside_tree():
+		_enter_tree()
 
 	for child in get_children():
 		child.queue_free()
@@ -381,8 +380,9 @@ func _on_tween_completed(idx: int) -> void:
 #	node.on_completed()
 
 	_tween_completed += 1
+	print("done")
 
-	if _tween_completed >= _animation_data.size():
+	if _tween_completed >= 0: # _animation_data.size():
 		_tween.stop()
 
 		emit_signal("animation_completed")
